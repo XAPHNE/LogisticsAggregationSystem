@@ -6,10 +6,14 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Distance;
 use App\Models\Fleet;
+use App\Models\Location;
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,38 +22,48 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
         // \App\Models\User::factory(10)->create();
 
-         $user1 = User::factory()->create([     //  Initial Users created with roles for testing
-             'name' => 'Admin User',
-             'email' => 'admin@last.com',
-         ]);
-        $user2 = User::factory()->create([
+        $user1 = User::factory()->create([
+            'name' => 'Super Admin',
+            'email' => 'superadmin@last.com'
+        ]);
+        $user2 = User::factory()->create([     //  Initial Users created with roles for testing
+            'name' => 'Admin User',
+            'email' => 'admin@last.com',
+        ]);
+        $user3 = User::factory()->create([
             'name' => 'Employee User',
             'email' => 'employee@last.com',
         ]);
-        $user3 = User::factory()->create([
+        $user4 = User::factory()->create([
             'name' => 'Fleet Owner',
             'email' => 'owner@last.com',
         ]);
-        $user4 = User::factory()->create([
+        $user5 = User::factory()->create([
             'name' => 'Driver User',
             'email' => 'driver@last.com',
         ]);
-        $user5 = User::factory()->create([
+        $user6 = User::factory()->create([
             'name' => 'Customer User',
             'email' => 'customer@last.com',
         ]);
-        $role1 = Role::create(['name' => 'Administrator']);
+
+        $role1 = Role::create(['name' => 'Super Admin'])
+            ->givePermissionTo(Permission::all());
+        $role2 = Role::create(['name' => 'Administrator']);
+        $role3 = Role::create(['name' => 'Employee']);
+        $role4 = Role::create(['name' => 'Fleet Owner']);
+        $role5 = Role::create(['name' => 'Driver']);
+        $role6 = Role::create(['name' => 'Customer']);
+
         $user1->assignRole($role1);
-        $role2 = Role::create(['name' => 'Employee']);
-        $user2->assignRole($role2);
-        $role3 = Role::create(['name' => 'Fleet Owner']);
+        $user2->assignRole($role2, $role1);
         $user3->assignRole($role3);
-        $role4 = Role::create(['name' => 'Driver']);
         $user4->assignRole($role4);
-        $role5 = Role::create(['name' => 'Customer']);
         $user5->assignRole($role5);
+        $user6->assignRole($role6);
 //      -----------------------END----------------------------
 
         //  Initial Categories created for testing
@@ -84,7 +98,9 @@ class DatabaseSeeder extends Seeder
         }
 //      ----------------------------END-----------------------------------
 
-        Fleet::factory()->count(50)->create();
+        Location::factory()->count(50)->create();
+//        Fleet::factory()->count(50)->create();
         Distance::factory()->count(50)->create();
+        Order::factory()->count(50)->create();
     }
 }

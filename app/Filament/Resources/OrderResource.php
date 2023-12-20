@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use PhpParser\Node\Expr\Cast\Double;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
 class OrderResource extends Resource
 {
@@ -182,7 +183,15 @@ class OrderResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true)
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        'Open' => OrderStatusEnum::OPEN->value,
+                        'Accepted' => OrderStatusEnum::ACCEPTED->value,
+                        'Transit' => OrderStatusEnum::TRANSIT->value,
+                        'Completed' => OrderStatusEnum::COMPLETED->value,
+                        'Cancelled' => OrderStatusEnum::CANCELLED->value,
+                    ]),
+                Tables\Filters\TrashedFilter::make()
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
@@ -192,6 +201,8 @@ class OrderResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    ExportBulkAction::make()
+                        ->label('Download as .xlsx'),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);

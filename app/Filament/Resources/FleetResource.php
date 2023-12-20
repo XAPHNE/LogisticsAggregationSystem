@@ -16,6 +16,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
 class FleetResource extends Resource
 {
@@ -30,6 +31,11 @@ class FleetResource extends Resource
     public static function getNavigationBadge() : ?string
     {
         return (string) static::getModel()::count();
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['registration_num', ];
     }
 
     public static function form(Form $form): Form
@@ -175,7 +181,17 @@ class FleetResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('permit_type')
+                    ->label('Permit')
+                    ->options([
+                        'All India' => FleetPermitTypeEnum::ALL_INDIA->value,
+                        'All Assam' => FleetPermitTypeEnum::ALL_ASSAM->value,
+                    ]),
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        'Available' => FleetStatusEnum::AVAILABLE->value,
+                        'Assigned' => FleetStatusEnum::ASSIGNED->value,
+                    ])
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
@@ -185,6 +201,8 @@ class FleetResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    ExportBulkAction::make()
+                        ->label('Download as .xlsx'),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);

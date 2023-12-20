@@ -68,6 +68,7 @@ class FleetFactory extends Factory
             'available_length' => $this->faker->numberBetween(2000, 2200),
             'available_width' => $this->faker->numberBetween(1500, 1800),
             'status' => $this->faker->randomElement(['Available', 'Assigned']),
+            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }

@@ -11,11 +11,14 @@
         "php": "^8.1",
         "althinect/filament-spatie-roles-permissions": "^2.2",
         "filament/filament": "^3.1",
+        "filament/widgets": "^3.1",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^3.3",
+        "pxlrbt/filament-excel": "^2.2",
+        "pxlrbt/filament-spotlight": "^1.0",
         "spatie/laravel-permission": "^6.2"
     },
     "require-dev": {
