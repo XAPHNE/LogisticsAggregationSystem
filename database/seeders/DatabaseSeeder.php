@@ -59,7 +59,7 @@ class DatabaseSeeder extends Seeder
         $role6 = Role::create(['name' => 'Customer']);
 
         $user1->assignRole($role1);
-        $user2->assignRole($role2, $role1);
+        $user2->assignRole($role2);
         $user3->assignRole($role3);
         $user4->assignRole($role4);
         $user5->assignRole($role5);
